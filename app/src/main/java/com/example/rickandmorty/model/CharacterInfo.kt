@@ -3,7 +3,7 @@ package com.example.rickandmorty.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Character(
+data class CharacterInfo(
     val id: Int,
     val name: String,
     val status: String,
@@ -17,3 +17,4 @@ data class Character(
     val url: String,
     val created: String
 )
+

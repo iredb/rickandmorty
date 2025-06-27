@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.rickandmorty.data.CharactersRepository
-import com.example.rickandmorty.model.Character
+import com.example.rickandmorty.model.CharacterInfo
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModelProvider
@@ -32,14 +32,9 @@ class CharacterListViewModel(
         viewModelScope.launch {
             characterListUiState = try {
                 val response = repository.getCharacters(currentPage)
-                val updatedList = when (val currentState = characterListUiState) {
-                    is CharacterListUiState.Success -> {
-                        currentState.characters + response.results
-                    }
-                    else -> response.results
-                }
 
-                CharacterListUiState.Success(updatedList)
+
+                CharacterListUiState.Success(response.results)
             } catch (e: Exception) {
                 Log.e("API_ERROR", "Ошибка: ${e::class.java.simpleName} — ${e.message}", e)
                 CharacterListUiState.Error
@@ -66,7 +61,7 @@ class CharacterListViewModel(
 
 
 sealed interface CharacterListUiState {
-    data class Success(val characters: List<Character>) : CharacterListUiState
+    data class Success(val characters: List<CharacterInfo>) : CharacterListUiState
     object Error : CharacterListUiState
     object Loading : CharacterListUiState
 }

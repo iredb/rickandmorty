@@ -16,16 +16,23 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.rickandmorty.R
+import com.example.rickandmorty.ui.navigation.AppNavigation
+import com.example.rickandmorty.ui.screens.CharacterDetailScreen
+import com.example.rickandmorty.ui.screens.CharacterDetailViewModel
 import com.example.rickandmorty.ui.screens.CharacterListScreen
 import com.example.rickandmorty.ui.screens.CharacterListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RickAndMortyApp() {
+    val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val characterListViewModel: CharacterListViewModel = viewModel(factory = CharacterListViewModel.Factory)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -39,11 +46,9 @@ fun RickAndMortyApp() {
         ) {
             val characterListViewModel: CharacterListViewModel = viewModel(factory = CharacterListViewModel.Factory)
 
-            CharacterListScreen(
-                characterUiState = characterListViewModel.characterListUiState,
-                retryAction = characterListViewModel::loadNextPage,
-                onCharacterClick = { /* TODO: перейти к персонажу */ },
-                contentPadding = innerPadding
+            AppNavigation(
+                navController = navController,
+                modifier = Modifier.padding(innerPadding)
             )
         }
     }

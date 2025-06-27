@@ -30,24 +30,22 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.rickandmorty.R
-import com.example.rickandmorty.model.Character
+import com.example.rickandmorty.model.CharacterInfo
 
 @Composable
 fun CharacterListScreen(
     characterUiState: CharacterListUiState,
     retryAction: () -> Unit,
-    onCharacterClick: (Character) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
+    onCharacterClick: (CharacterInfo) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     when (characterUiState) {
         is CharacterListUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is CharacterListUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
         is CharacterListUiState.Success -> CharactersGridScreen(
-            characters = characterUiState.characters,
+            characterInfo = characterUiState.characters,
             onCharacterClick = onCharacterClick,
-            modifier = modifier,
-            contentPadding = contentPadding
+            modifier = modifier
         )
     }
 }
@@ -89,8 +87,8 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun CharactersGridScreen(
-    characters: List<Character>,
-    onCharacterClick: (Character) -> Unit,
+    characterInfo: List<CharacterInfo>,
+    onCharacterClick: (CharacterInfo) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -99,9 +97,9 @@ fun CharactersGridScreen(
         modifier = modifier.padding(horizontal = 4.dp),
         contentPadding = contentPadding
     ) {
-        items(items = characters, key = { it.id }) { character ->
+        items(items = characterInfo, key = { it.id }) { character ->
             CharacterCard(
-                character = character,
+                characterInfo = character,
                 onClick = onCharacterClick,
                 modifier = Modifier
                     .padding(4.dp)
@@ -113,22 +111,22 @@ fun CharactersGridScreen(
 }
 
 @Composable
-fun CharacterCard(character: Character, onClick: (Character) -> Unit, modifier: Modifier = Modifier) {
+fun CharacterCard(characterInfo: CharacterInfo, onClick: (CharacterInfo) -> Unit, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.clickable { onClick(character) },
+        modifier = modifier.clickable { onClick(characterInfo) },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(character.image)
+                .data(characterInfo.image)
                 .crossfade(true)
                 .build(),
-            contentDescription = character.name,
+            contentDescription = characterInfo.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth()
         )
         Text(
-            text = character.name,
+            text = characterInfo.name,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(8.dp)
         )
