@@ -44,8 +44,6 @@ fun RickAndMortyApp() {
             .fillMaxSize()
             .padding(innerPadding)
         ) {
-            val characterListViewModel: CharacterListViewModel = viewModel(factory = CharacterListViewModel.Factory)
-
             AppNavigation(
                 navController = navController,
                 modifier = Modifier.padding(innerPadding)
